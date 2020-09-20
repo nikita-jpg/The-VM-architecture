@@ -1,9 +1,7 @@
 %include "io.inc"
 
 section .data
-arr dw 5, 5, 4, 3, 2, 1
-element dw 0
-t dw 0
+arr dw 5, 5, 40000, 3, 2, 1
 section .text
 global CMAIN
 CMAIN:
@@ -23,9 +21,8 @@ part_1:;работает
         mov ax, cx
         mov bx, 2
         mul bx
-        mov dx, [arr + eax]
-        push dx
-        
+        mov edx, [arr + eax]
+        push edx
         
         ;проверяем является ли данный элемент массива чётным.
         mov ax,dx
@@ -45,14 +42,14 @@ part_1:;работает
         mul bx
         mov word [arr + eax], 0
         loop lEven
-          jmp part_2
+        jmp part_2
          
          ;нечётное число остаётся внутри
-        lEven_unEven:
-          pop ax
-          mov ax,0
-          loop lEven
-          jmp part_2
+     lEven_unEven:
+        pop eax
+        mov eax,0
+        loop lEven
+        jmp part_2
 
 ;Кладём в стек оставшиеся нечётные значения                
  part_2:     
@@ -62,7 +59,7 @@ part_1:;работает
         mov ax, cx
         mov bx, 2
         mul bx
-        mov dx, [arr + eax]
+        mov edx, [arr + eax]
         
         ;сравниваем элемент с 0. Если 0,то чётное число,стоявшее на этом месте уже в стеке,
         ;если не 0, то отправляем нечётное число в стек
@@ -72,7 +69,7 @@ part_1:;работает
         jmp part_3
         
         lEven_UnEven:
-        push dx
+        push edx
         loop lUnEven
         jmp part_3
       
@@ -85,12 +82,13 @@ part_3:
         mov bx, 2
         mul bx
 
-        pop dx
+        pop edx
         mov word [arr + eax],dx
         
         loop extraction
         jmp part_4
         
+;Выводим данные      
 part_4:
     mov cx,[arr]
     
@@ -99,8 +97,8 @@ part_4:
     mov bx,2
     mul bx
     mov edx,[arr + eax]
-    mov dword [t],edx
-    PRINT_UDEC 2,[t]
+    PRINT_UDEC 2,edx
+    PRINT_CHAR ','
     dec cx
     cmp cx,0
     jne l1

@@ -30,7 +30,8 @@ part_1:;работает
         mov bx, 2
         div bx
        
-        cmp dx, 0
+        mov ax, dx
+        cmp ax, 0
         je lEven_even
         jmp lEven_unEven
         
@@ -63,7 +64,8 @@ part_1:;работает
         
         ;сравниваем элемент с 0. Если 0,то чётное число,стоявшее на этом месте уже в стеке,
         ;если не 0, то отправляем нечётное число в стек
-        cmp dx, 0
+        mov ax, dx
+        cmp ax, 0
         jne lEven_UnEven
         loop lUnEven
         jmp part_3
@@ -98,9 +100,10 @@ part_4:
     mul bx
     mov edx,[arr + eax]
     PRINT_UDEC 2,edx
-    PRINT_CHAR ','
+    PRINT_CHAR ' '
     dec cx
-    cmp cx,0
+    mov ax, cx
+    cmp ax,0
     jne l1
     
 ret

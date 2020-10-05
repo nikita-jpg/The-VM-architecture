@@ -30,5 +30,5 @@ CMAIN:
     loop l1
    
     mov ax, [sum]
-    PRINT_UDEC 2, ax
+    PRINT_UDEC 4, ax
 Ret

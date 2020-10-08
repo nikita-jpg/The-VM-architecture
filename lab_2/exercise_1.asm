@@ -1,18 +1,19 @@
 %include "io.inc"
 
 section .data
-Vec1: Times 60 dd     10000,        10010,        10020,        10030,        10040
-Vec2: Times 60 dd     20000,        20010,        20020,        20030,        20040
-;               200 000 000 + 200 300 100 + 200 600 400 + 200 900 900 + 201 201 600 = 1 003 003 000
-;в сумме 60 180 180 000
+Vec1: Times 60 dd     1000000000,        1001000000,        1002000000,        1003000000,        1004000000
+Vec2: Times 60 dd     2000000000,        2001000000,        2002000000,        2003000000,        2004000000
+;               2 000 000 000 000 000 000 + 2 003 001 000 000 000 000 + 2 006 004 000 000 000 000
+; + 2 009 009 000 000 000 000 + 2 012 016 000 000 000 000 = 10 030 030 000 000 000 000
+;в сумме 601 801 800 000 000 000 000
 
 length dw 300
 
-prefix dd 4278190080 ;
-perep dd 16777215 ;1ед,23 нуля в двоич. сс
-
 sum1 dd 0; первые 32 бита суммы
 sum2 dd 0; вторые 32 бита суммы
+sum3 dd 0; третьи 32 бита суммы
+
+sum
 
 section .text
 global CMAIN
@@ -28,46 +29,29 @@ CMAIN:
     mov ecx, [length]
     
     l1:    
-        
-        ;достаём элементы с одинаковым индексом
-        add eax, [Vec1 + 4 * (ecx - 1)]
-        add ebx, [Vec2 + 4 * (ecx - 1)]
+        mov edx, 0
+    
+        ;достаём элементы с одинауовым индексом
+        mov eax, [Vec1 + 4 * (ecx - 1)]
+        mov ebx, [Vec2 + 4 * (ecx - 1)]
         
         ;перемножаем их
         mul ebx
         mov ebx, eax
         
-        ;если число в edx >= perep
-        cmp edx, perep
-        JG lPerep
-        JMP l2
+        ;складываем с уже существующей суммой
+        mov eax, [sum1]
+        add eax, ebx
+        mov [sum1], eax
         
-        lPerep:
-            ;сдвигаем влево так, чтобы 24ый бит оказался на 32ой позиции
-            sal edx, 8
-            ;если edx >= этого числа(2^31), то на 32ой позиции 1, иначе 0
-            cmp edx, 2147483648
-            JG lUnit
-            sar edx, 8
-            JMP l2
+        mov eax, [sum2]
+        adc eax, edx
+        mov [sum2], eax
         
-        ;сейчас регистр имееи вид 8единиц потом наше число в 24ёх битах
-        lUnit:
-            ;обнуляемя 8мь единиц
-            add edx, 8388608
-        
-        l2:
-            ;складываем с уже существующей суммой
-            mov eax, [sum1]
-            add eax, ebx
-            mov [sum1], eax
-        
-            mov eax, [sum2]
-            adc eax, 0 
-            mov [sum2], eax
+        mov eax, [sum3]
+        adc eax, 0
+        mov [sum3], eax
     loop l1
-    
-
     
     ;вывод
     mov eax, [sum1]
@@ -76,5 +60,10 @@ CMAIN:
     NEWLINE
     
     mov eax, [sum2]
+    PRINT_UDEC 4, eax
+    
+    NEWLINE
+    
+    mov eax, [sum3]
     PRINT_UDEC 4, eax
 ret

@@ -15,7 +15,7 @@ CMAIN:
     xor eax, eax
     ret
     
-    ; ладЄт в exa наибольшее из 3-х чисел
+    ; ладЄт в eax наибольшее из 3-х чисел
 max:
     c1:
     cmp ebx, ecx

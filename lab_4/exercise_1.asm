@@ -7,15 +7,15 @@ CMAIN:
     ;write your code here
     
     mov eax, 0 ;хранит результат сравнения
-    mov ebx, 4294967295 ;4294967295
-    mov ecx, 4294967295 ;4294967295
-    mov edx, 4294967295 ;4294967295
+    mov ebx, 1 ;4294967295
+    mov ecx, 2 ;4294967295
+    mov edx, 3 ;4294967295
     call max
     PRINT_UDEC 4, eax
     xor eax, eax
     ret
     
-    ;возвращает цифру 1,2,3 в зависимости от номера наибольшего их 3-х чисел. 0, если все числа равны
+    ;Кладёт в exa наибольшее из 3-х чисел
 max:
     c1:
     cmp ebx, ecx
@@ -35,11 +35,11 @@ max:
     cmp eax, edx
     jge sax
     
-    ;tedb - one edx bigger
+    ;sdx - one edx bigger
     sdx:
     mov eax, edx
     
-    ;seab - second eax bigger
+    ;sax - second eax bigger
     sax:
     
     ret
